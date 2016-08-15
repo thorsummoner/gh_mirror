@@ -31,10 +31,10 @@ def _gh_token_git_config():
     return token
 
 
-GH_TOKEN = next((e for e in [
+GH_TOKEN = next(e for e in [
     os.environ.get('GH_TOKEN', None),
     _gh_token_git_config(),
-]))
+] if e)
 
 OS_FILE_EXISTS = 17
 SHELF_SPACE = os.path.expanduser('~/.cache/gh_mirror.shelf')
@@ -67,7 +67,7 @@ def _renew_cache(argp, shelf):
         page = 0
         while True:
             page += 1
-            logging.info('Fetching page {} of cache...'.format(page))
+            logging.info('Fetching page %s of cache...', page)
             http_code, user_repos_page = gh_api.user.repos.get(page=page)
             if http_code != 200:
                 raise UserWarning((http_code, user_repos_page))
